@@ -10,7 +10,7 @@ app = Flask(
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="YOUR_PASSWORD",  # replace with your MySQL password
+    password="dpeovojaa",  # replace with your MySQL password
     database="valentine_quiz"
 )
 cursor = db.cursor(dictionary=True)
@@ -51,3 +51,4 @@ def responses():
 # ----------------- Run App -----------------
 if __name__ == '__main__':
     app.run(debug=True)
+
