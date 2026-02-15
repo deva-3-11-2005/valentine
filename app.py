@@ -1,26 +1,23 @@
 from flask import Flask, request, jsonify, render_template
 import mysql.connector
-import os
 
 app = Flask(
     __name__,
-    template_folder=r"C:\Users\deva7\valentine-quiz"  # <-- your index.html location
+    template_folder=r"C:\Users\deva7\valentine-quiz"  # your index.html location
 )
 
 # ----------------- MySQL Connection -----------------
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="dpeovojaa",  # replace with your MySQL password
+    password="YOUR_PASSWORD",  # replace with your MySQL password
     database="valentine_quiz"
 )
 cursor = db.cursor(dictionary=True)
 
 # ----------------- Routes -----------------
-
 @app.route('/')
 def index():
-    # Flask will look for index.html in template_folder
     return render_template('index.html')
 
 @app.route('/submit', methods=['POST'])
@@ -37,8 +34,14 @@ def submit():
         (name, q1, q2, q3, q4)
     )
     db.commit()
-    return jsonify({"status": "success"})
 
+    # Get last 5 responses to return to frontend
+    cursor.execute("SELECT * FROM responses ORDER BY ts DESC LIMIT 5")
+    last_responses = cursor.fetchall()
+
+    return jsonify({"status": "success", "last_responses": last_responses})
+
+# Optional route to see all responses as JSON
 @app.route('/responses', methods=['GET'])
 def responses():
     cursor.execute("SELECT * FROM responses ORDER BY ts DESC")
