@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Valentine's Friendship Quiz</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Sacramento&display=swap" rel="stylesheet">
+	<style>
+		:root{
+			--pink:#ffb4c7;
+			--deep:#d63f5b;
+			--soft:#cb0f38;
+			--accent:#ff6b81;
+			--card-bg: rgba(255,255,255,0.85);
+		}
+		*{box-sizing:border-box}
+		html,body{height:100%}
+		body{
+			margin:0;
+			font-family:"Poppins",system-ui,Segoe UI,Arial;
+			background: linear-gradient(135deg,#fff0f3 0%, #ffeef2 35%, #fff 100%);
+			color:#333;
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			padding:24px;
+		}
+		.stage{
+			width:100%;
+			max-width:720px;
+			background:var(--card-bg);
+			border-radius:20px;
+			box-shadow:0 8px 30px rgba(214,63,91,0.12);
+			padding:28px;
+			position:relative;
+			overflow:hidden;
+		}
+		h1{
+			font-family:Sacramento, cursive;
+			font-size:38px;
+			margin:0 0 6px 0;
+			color:var(--deep);
+		}
+		p.lead{margin:0 0 18px 0;color:#6c3a45}
+		form{display:grid;gap:14px}
+		.field{display:flex;flex-direction:column;gap:8px}
+		label{font-weight:600}
+		input[type="text"], input[type="search"], textarea, select{
+			padding:10px 12px;border-radius:10px;border:1px solid rgba(200,70,90,0.12);
+			background:transparent;font-size:15px;outline:none
+		}
+		.options{display:flex;flex-wrap:wrap;gap:8px}
+		.option{border-radius:999px;padding:8px 12px;border:1px solid transparent;background:linear-gradient(90deg,rgba(255,107,129,0.12),rgba(255,255,255,0.02));cursor:pointer}
+		.option input{display:none}
+		.option.selected{background:linear-gradient(90deg,var(--accent),var(--deep));color:white;border:1px solid rgba(0,0,0,0.06)}
+		.btn{display:inline-block;padding:12px 18px;border-radius:12px;background:var(--deep);color:white;border:none;font-weight:600;cursor:pointer}
+		.btn.ghost{background:transparent;color:var(--deep);border:2px solid var(--pink)}
+		.summary{display:none}
+		.heart{position:absolute;right:-40px;top:-40px;width:160px;height:160px;background:var(--accent);transform:rotate(45deg);border-radius:20px 0 0 20px;opacity:0.12}
+		.heart:before,.heart:after{content:'';position:absolute;width:160px;height:160px;border-radius:50%;background:var(--accent)}
+		.heart:before{left:0;top:-80px}
+		.heart:after{left:-80px;top:0}
+		/* mobile tweaks */
+		@media (max-width:480px){
+			.stage{padding:20px;border-radius:16px}
+			h1{font-size:34px}
+			.heart{width:120px;height:120px}
+		}
+		.small-note{font-size:13px;color:#8a6370}
+	</style>
+</head>
+<body>
+	<main class="stage" role="main">
+		<div class="heart" aria-hidden="true"></div>
+		<header>
+			<h1>Friendship Quiz</h1>
+			<p class="lead">A little Valentine just for you — answer a few fun questions!</p>
+		</header>
+
+		<section id="intro">
+			<form id="nameForm">
+				<div class="field">
+					<label for="friendName">What's your name?</label>
+					<input id="friendName" name="friendName" type="text" placeholder="e.g. Mia" required autocomplete="name" />
+					<div class="small-note">This will personalize your message — only on this page.</div>
+				</div>
+				<div style="display:flex;gap:10px;margin-top:6px;">
+					<button class="btn" type="submit">Start the quiz</button>
+				</div>
+			</form>
+		</section>
+
+		<section id="quiz" style="display:none;" aria-hidden="true">
+			<form id="quizForm">
+				<div class="field">
+					<label>How do you see me as a friend?</label>
+					<div class="options" id="q1">
+						<label class="option"><input type="radio" name="q1" value="just friend">just a friend</label>
+						<label class="option"><input type="radio" name="q1" value="best friend">Best friend</label>
+						<label class="option"><input type="radio" name="q1" value="love">love</label>
+						<label class="option"><input type="radio" name="q1" value="some one">Some one</label>
+					</div>
+				</div>
+
+				<div class="field">
+					<label for="q2">Which quality of mine you don't like?</label>
+					<select id="q2" name="q2" required>
+						<option value="caring">Caring</option>
+						<option value="loving">Loving</option>
+						<option value="annoying">Annoying</option>
+						<option value="irritating">Irritating</option>
+					</select>
+				</div>
+
+				<div class="field">
+					<label for="q3">Describe our friendship in one word:</label>
+					<input id="q3" name="q3" type="text" placeholder="One word..." required />
+				</div>
+
+				<div class="field">
+					<label>Pick your favourite place we can go next:</label>
+					<div class="options" id="q4">
+						<label class="option"><input type="radio" name="q4" value="park">Park</label>
+						<label class="option"><input type="radio" name="q4" value="movies">Movies</label>
+						<label class="option"><input type="radio" name="q4" value="walks">Walks</label>
+						<label class="option"><input type="radio" name="q4" value="beach">Beach</label>
+						<label class="option"><input type="radio" name="q4" value="no places">No places</label>
+					</div>
+				</div>
+
+				<div style="display:flex;gap:10px;margin-top:6px;">
+					<button class="btn" type="submit">Send my answers</button>
+					<button type="button" class="btn ghost" id="backBtn">Change name</button>
+				</div>
+			</form>
+		</section>
+
+		<section id="result" class="summary" aria-hidden="true">
+			<h2 id="greet"></h2>
+			<p id="message"></p>
+			<div id="answers" style="margin-top:12px"></div>
+			<div style="margin-top:16px;display:flex;gap:10px;">
+				<button class="btn" id="restart">Take again</button>
+			</div>
+		</section>
+	</main>
+
+	<script>
+	function bindOptionGroups(){
+		document.querySelectorAll('.options').forEach(group=>{
+			group.addEventListener('click', e=>{
+				const label = e.target.closest('label.option');
+				if(!label) return;
+				const input = label.querySelector('input');
+				if(!input) return;
+				if(input.type==='radio'){
+					group.querySelectorAll('label.option').forEach(l=>l.classList.remove('selected'));
+					label.classList.add('selected');
+					input.checked = true;
+				} else {
+					label.classList.toggle('selected');
+					input.checked = label.classList.contains('selected');
+				}
+			});
+		});
+	}
+	bindOptionGroups();
+
+	const intro = document.getElementById('intro');
+	const quiz = document.getElementById('quiz');
+	const result = document.getElementById('result');
+	const nameForm = document.getElementById('nameForm');
+	const quizForm = document.getElementById('quizForm');
+
+	nameForm.addEventListener('submit', e=>{
+		e.preventDefault();
+		const name = document.getElementById('friendName').value.trim();
+		if(!name) return;
+		intro.style.display='none';
+		quiz.style.display='block';
+		quiz.setAttribute('aria-hidden','false');
+		document.getElementById('q3').focus?.();
+	});
+
+	document.getElementById('backBtn').addEventListener('click', ()=>{
+		quiz.style.display='none';
+		intro.style.display='block';
+	});
+
+	quizForm.addEventListener('submit', async e=>{
+		e.preventDefault();
+		const name = document.getElementById('friendName').value.trim() || 'friend';
+		const q1 = quizForm.q1.value || 'special';
+		const q2 = quizForm.q2.value || '';
+		const q3 = quizForm.q3.value.trim() || '';
+		const q4 = quizForm.q4.value || '';
+
+		// Send to Flask + MySQL
+		try{
+			const res = await fetch('/submit', {
+				method:'POST',
+				headers:{'Content-Type':'application/json'},
+				body: JSON.stringify({name,q1,q2,q3,q4})
+			});
+			const resultDB = await res.json();
+			if(resultDB.status==='success') console.log('Saved to DB');
+		}catch(err){ console.error('DB error',err); }
+
+		// Build friendly message
+		const greet = document.getElementById('greet');
+		const message = document.getElementById('message');
+		const answersEl = document.getElementById('answers');
+		greet.textContent = `Hey ${name}! 💖`;
+
+		const niceLine = `Thanks for sharing — you see me as ${q1}. I love that you notice my ${q2}.`;
+		const wordLine = q3 ? `You described our friendship as “${q3}”.` : '';
+		const doLine = q4 ? `My favorite too: ${q4.replace('-', ' ') }` : '';
+		message.textContent = `${niceLine} ${wordLine} ${doLine}`;
+
+		answersEl.innerHTML = `
+			<strong>Summary of your answers</strong>
+			<ul style="margin:8px 0 0 18px">
+				<li>How you see me: <strong>${q1}</strong></li>
+				<li>Favorite quality: <strong>${q2}</strong></li>
+				<li>One-word friendship: <strong>${q3 || '—'}</strong></li>
+				<li>Favorite thing together: <strong>${q4 || '—'}</strong></li>
+			</ul>
+		`;
+
+		quiz.style.display='none';
+		result.style.display='block';
+		result.setAttribute('aria-hidden','false');
+		result.animate([{transform:'scale(0.98)'},{transform:'scale(1)'}],{duration:420,iterations:1});
+	});
+
+	document.getElementById('restart').addEventListener('click', ()=>{
+		quizForm.reset();
+		document.querySelectorAll('label.option').forEach(l=>l.classList.remove('selected'));
+		result.style.display='none';
+		intro.style.display='block';
+		document.getElementById('friendName').focus();
+	});
+	</script>
+</body>
+</html>
