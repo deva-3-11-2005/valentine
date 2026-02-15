@@ -9,7 +9,6 @@
 		:root{
 			--pink:#ffb4c7;
 			--deep:#d63f5b;
-			--soft:#cb0f38;
 			--accent:#ff6b81;
 			--card-bg: rgba(255,255,255,0.85);
 		}
@@ -45,7 +44,7 @@
 		form{display:grid;gap:14px}
 		.field{display:flex;flex-direction:column;gap:8px}
 		label{font-weight:600}
-		input[type="text"], input[type="search"], textarea, select{
+		input[type="text"], select{
 			padding:10px 12px;border-radius:10px;border:1px solid rgba(200,70,90,0.12);
 			background:transparent;font-size:15px;outline:none
 		}
@@ -60,7 +59,6 @@
 		.heart:before,.heart:after{content:'';position:absolute;width:160px;height:160px;border-radius:50%;background:var(--accent)}
 		.heart:before{left:0;top:-80px}
 		.heart:after{left:-80px;top:0}
-		/* mobile tweaks */
 		@media (max-width:480px){
 			.stage{padding:20px;border-radius:16px}
 			h1{font-size:34px}
@@ -139,6 +137,8 @@
 			<h2 id="greet"></h2>
 			<p id="message"></p>
 			<div id="answers" style="margin-top:12px"></div>
+			<h3>Last 5 Responses</h3>
+			<ul id="lastResponses" style="margin-left:18px;"></ul>
 			<div style="margin-top:16px;display:flex;gap:10px;">
 				<button class="btn" id="restart">Take again</button>
 			</div>
@@ -202,8 +202,18 @@
 				headers:{'Content-Type':'application/json'},
 				body: JSON.stringify({name,q1,q2,q3,q4})
 			});
-			const resultDB = await res.json();
-			if(resultDB.status==='success') console.log('Saved to DB');
+			const data = await res.json();
+			if(data.status==='success') console.log('Saved to DB');
+
+			// Update last 5 responses
+			const lastUl = document.getElementById('lastResponses');
+			lastUl.innerHTML = '';
+			data.last_responses.forEach(r=>{
+				const li = document.createElement('li');
+				li.textContent = `${r.name} sees me as ${r.q1}, notice ${r.q2}, friendship: ${r.q3}, place: ${r.q4}`;
+				lastUl.appendChild(li);
+			});
+
 		}catch(err){ console.error('DB error',err); }
 
 		// Build friendly message
